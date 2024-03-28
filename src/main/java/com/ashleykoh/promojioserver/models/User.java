@@ -1,9 +1,8 @@
 package com.ashleykoh.promojioserver.models;
 
+import jakarta.validation.constraints.NotBlank;
 import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,8 +15,10 @@ public class User {
     @Id
     private String id;
     private String name;
+    @NotBlank(message = "username required")
     private String username;
-    private String passwordHash;
+    @NotBlank(message = "password required")
+    private String password;
     private Binary profileImage;
     private int points;
     private int tierPoints;
@@ -25,9 +26,9 @@ public class User {
     @DBRef
     private List<Promo> promos = new ArrayList<>();
 
-    public User(String username, String passwordHash) {
+    public User(String username, String password) {
         this.username = username;
-        this.passwordHash = passwordHash;
+        this.password = password;
         this.name = "";
         this.profileImage = null;
         this.points = 0;
@@ -61,6 +62,22 @@ public class User {
 
     public void setPromos(List<Promo> promos) {
         this.promos = promos;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     @Override
