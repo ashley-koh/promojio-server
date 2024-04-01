@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.AuthenticationException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -50,16 +51,13 @@ public class UserController {
         return hexString.toString();
     }
 
-    @GetMapping("/{id}")
-    public User getUser(@PathVariable("id") String id) throws NoSuchUserException {
-
-        User user = userRepository.findUserById(id);
-
-        if (user == null) { throw new NoSuchUserException(); }
-
-        return user;
-    }
-
+//     Create a new user
+//     pass a user object
+//    {
+//        "name": "John Doe",
+//        "username": "john_doe",
+//        "password": "password",
+//    }
     @PostMapping
     public ResponseEntity<String> createUser(@RequestBody @Valid User user) {
 
@@ -82,14 +80,29 @@ public class UserController {
         }
     }
 
-    // Update User details such as name and username
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable String id, @RequestBody @Valid User newUser) {
+
+    // Single User Operations
+
+    // Get User from id
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable("id") String id) throws NoSuchUserException {
+
         User user = userRepository.findUserById(id);
 
         if (user == null) { throw new NoSuchUserException(); }
 
-        System.out.println(user);
+        return user;
+    }
+
+
+    // Update User details such as name and username
+    @PatchMapping("/{id}/details")
+    public User updateUserDetails(@PathVariable String id, @RequestBody @Valid User newUser) throws AuthenticationException {
+        User user = userRepository.findUserById(id);
+
+        if (user == null) { throw new NoSuchUserException(); }
+        if (!newUser.getPassword().equals(user.getPassword())) { throw new AuthenticationException(); }
+
 
         if (newUser.getName() != null)  {
             user.setName(newUser.getName());
@@ -99,7 +112,22 @@ public class UserController {
             user.setUsername(newUser.getUsername());
         }
 
-        // Hash password
+        User updatedUser = userRepository.save(user);
+//        System.out.println(updatedUser);
+        return user;
+    }
+
+    @PatchMapping("/{id}/update/points")
+    public User updateUserPoints(@PathVariable String id, @RequestBody User newUser) throws AuthenticationException {
+        User user = userRepository.findUserById(id);
+
+        if (user == null) { throw new NoSuchUserException(); }
+        if (!newUser.getPassword().equals(user.getPassword())) { throw new AuthenticationException(); }
+
+        System.out.println(user);
+
+        user.setPoints(newUser.getPoints());
+
         userRepository.save(user);
         return user;
     }

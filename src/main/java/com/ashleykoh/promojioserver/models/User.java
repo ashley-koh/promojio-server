@@ -112,12 +112,14 @@ public class User {
                 """
                 User:
                 id='%s'
+                name='%s'
                 username='%s'
+                password='%s'
                 memberTier=%s
                 points=%d
                 tierPoints=%d
                 """,
-                id, username, memberTier, points, tierPoints
+                id, name, username, password, memberTier, points, tierPoints
         );
     }
 
