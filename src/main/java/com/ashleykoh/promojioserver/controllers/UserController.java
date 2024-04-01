@@ -1,16 +1,10 @@
 package com.ashleykoh.promojioserver.controllers;
 
+import com.ashleykoh.promojioserver.exceptions.NoSuchUserException;
 import com.ashleykoh.promojioserver.models.User;
 import com.ashleykoh.promojioserver.repositories.UserRepository;
-import com.mongodb.client.MongoClients;
 import jakarta.validation.Valid;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +13,6 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Validated
 @RestController
@@ -61,11 +51,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable("id") String id) {
+    public User getUser(@PathVariable("id") String id) throws NoSuchUserException {
 
-        // Add no such user exception
+        User user = userRepository.findUserById(id);
 
-        return userRepository.findUserById(id);
+        if (user == null) { throw new NoSuchUserException(); }
+
+        return user;
     }
 
     @PostMapping
@@ -95,7 +87,7 @@ public class UserController {
     public User updateUser(@PathVariable String id, @RequestBody @Valid User newUser) {
         User user = userRepository.findUserById(id);
 
-        // Add no such user exception
+        if (user == null) { throw new NoSuchUserException(); }
 
         System.out.println(user);
 
