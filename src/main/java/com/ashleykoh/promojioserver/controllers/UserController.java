@@ -2,8 +2,15 @@ package com.ashleykoh.promojioserver.controllers;
 
 import com.ashleykoh.promojioserver.models.User;
 import com.ashleykoh.promojioserver.repositories.UserRepository;
+import com.mongodb.client.MongoClients;
 import jakarta.validation.Valid;
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +19,19 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Validated
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    @Autowired
+    private UserRepository userRepository;
+
     private static byte[] getSHA(String input) throws NoSuchAlgorithmException
     {
         // Static getInstance method is called with hashing SHA
@@ -45,18 +60,17 @@ public class UserController {
         return hexString.toString();
     }
 
-    @Autowired
-    private UserRepository userRepository;
-
     @GetMapping("/{id}")
     public User getUser(@PathVariable("id") String id) {
-        User user = userRepository.findUserById(id);
-        System.out.println(user);
-        return user;
+
+        // Add no such user exception
+
+        return userRepository.findUserById(id);
     }
 
     @PostMapping
     public ResponseEntity<String> createUser(@RequestBody @Valid User user) {
+
         try {
             // Check if another user with same username exists
             User duplicate = userRepository.findUsersByUsername(user.getUsername());
@@ -68,7 +82,7 @@ public class UserController {
             // Hash password
             user.setPassword(toHexString(getSHA(user.getPassword())));
             userRepository.save(user);
-            return ResponseEntity.ok("User created successfully");
+            return ResponseEntity.ok(user.getId());
 
         } catch (NoSuchAlgorithmException ex) {
             System.out.println("Exception thrown for incorrect algorithm: " + ex);
@@ -76,9 +90,34 @@ public class UserController {
         }
     }
 
+    // Update User details such as name and username
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable String id, @RequestBody @Valid User newUser) {
+        User user = userRepository.findUserById(id);
+
+        // Add no such user exception
+
+        System.out.println(user);
+
+        if (newUser.getName() != null)  {
+            user.setName(newUser.getName());
+        }
+
+        if (newUser.getUsername() != null) {
+            user.setUsername(newUser.getUsername());
+        }
+
+        // Hash password
+        userRepository.save(user);
+        return user;
+    }
+
+    // Important Behavior: Can be called successfully multiple times in a row
+    // It guarantees no such document with user id exists
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable String id) {
+    public ResponseEntity<String> deleteUser(@PathVariable String id) {
         userRepository.deleteById(id);
+        return ResponseEntity.ok("id no longer exists");
     }
 
 }
