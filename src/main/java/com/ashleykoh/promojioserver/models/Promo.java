@@ -14,19 +14,21 @@ public class Promo {
     @NotBlank(message = "brand required")
     private String brand;
     private Binary logoImage;
-    @NotNull(message = "value required")
-    private int value;
-    private String symbol;
+    @NotNull(message = "small label required")
+    private String smallLabel;
+    @NotNull(message = "big label required")
+    private String bigLabel;
     @NotBlank(message = "short description required")
     private String shortDescription;
+    @NotBlank(message = "short description required")
     private String longDescription;
-    @NotNull(message = "terms and conditions required")
-    private String[] termsAndConditions;
     @NotNull(message = "validity required")
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date validity;
     @NotNull(message = "points required")
     private int points;
+
+    private String url;
 
     public Promo() {}
 
@@ -54,20 +56,20 @@ public class Promo {
         this.logoImage = logoImage;
     }
 
-    public int getValue() {
-        return value;
+    public String getSmallLabel() {
+        return smallLabel;
     }
 
-    public void setValue(int value) {
-        this.value = value;
+    public void setSmallLabel(String smallLabel) {
+        this.smallLabel = smallLabel;
     }
 
-    public String getSymbol() {
-        return symbol;
+    public String getBigLabel() {
+        return bigLabel;
     }
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
+    public void setBigLabel(String bigLabel) {
+        this.bigLabel = bigLabel;
     }
 
     public String getShortDescription() {
@@ -84,14 +86,6 @@ public class Promo {
 
     public void setLongDescription(String longDescription) {
         this.longDescription = longDescription;
-    }
-
-    public String[] getTermsAndConditions() {
-        return termsAndConditions;
-    }
-
-    public void setTermsAndConditions(String[] termsAndConditions) {
-        this.termsAndConditions = termsAndConditions;
     }
 
     public Date getValidity() {

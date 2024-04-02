@@ -1,7 +1,6 @@
 package com.ashleykoh.promojioserver.controllers;
 
 import com.ashleykoh.promojioserver.controllers.forms.UserDetails;
-import com.ashleykoh.promojioserver.controllers.forms.UserMemberTier;
 import com.ashleykoh.promojioserver.controllers.forms.UserPoints;
 import com.ashleykoh.promojioserver.controllers.forms.UserTierPoints;
 import com.ashleykoh.promojioserver.models.User;
@@ -151,44 +150,50 @@ public class UserController extends BaseController {
 
         user.setTierPoints(userTierPoints.getTierPoints());
 
-        userRepository.save(user);
-        Map<String, Object> data = new HashMap<>();
-        data.put("user", user);
-        return successResponse(data);
-    }
-
-    @PatchMapping("/{id}/update/membertier")
-    public ResponseEntity<Map<String, Object>> updateUserMemberTier(
-            @PathVariable String id,
-            @RequestHeader("username") String username,
-            @RequestHeader("password") String password,
-            @RequestBody UserMemberTier userMemberTier
-    ) {
-        User user = userRepository.findUserById(id);
-
-        // check if user does not exist
-        if (user == null) { return userDoesNotExistResponse(); }
-
-        // check user credentials
-        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) {
-            return invalidCredentialsResponse();
-        }
-
-        String memberTier = userMemberTier.getMemberTier();
-
-        if (memberTier.equals("bronze") || memberTier.equals("silver") || memberTier.equals("gold") || memberTier.equals("platinum")) {
-            user.setMemberTier(memberTier);
-        } else {
-            Map<String, Object> data = new HashMap<>();
-            data.put("memberTier", "invalid option (bronze/silver/gold/platinum)");
-            return failResponse(data);
-        }
+        if userTierPoints.getTierPoints();
 
         userRepository.save(user);
         Map<String, Object> data = new HashMap<>();
         data.put("user", user);
         return successResponse(data);
     }
+
+    // Login
+    // Register
+
+
+//    @PatchMapping("/{id}/update/membertier")
+//    public ResponseEntity<Map<String, Object>> updateUserMemberTier(
+//            @PathVariable String id,
+//            @RequestHeader("username") String username,
+//            @RequestHeader("password") String password,
+//            @RequestBody UserMemberTier userMemberTier
+//    ) {
+//        User user = userRepository.findUserById(id);
+//
+//        // check if user does not exist
+//        if (user == null) { return userDoesNotExistResponse(); }
+//
+//        // check user credentials
+//        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) {
+//            return invalidCredentialsResponse();
+//        }
+//
+//        String memberTier = userMemberTier.getMemberTier();
+//
+//        if (memberTier.equals("bronze") || memberTier.equals("silver") || memberTier.equals("gold") || memberTier.equals("platinum")) {
+//            user.setMemberTier(memberTier);
+//        } else {
+//            Map<String, Object> data = new HashMap<>();
+//            data.put("memberTier", "invalid option (bronze/silver/gold/platinum)");
+//            return failResponse(data);
+//        }
+//
+//        userRepository.save(user);
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("user", user);
+//        return successResponse(data);
+//    }
 
     // Important Behavior: Can be called successfully multiple times in a row
     // It guarantees no such document with user id exists
