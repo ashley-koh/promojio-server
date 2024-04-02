@@ -25,9 +25,10 @@ public class GlobalExceptionHandler {
 
     // Invalid Credentials
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<String> handleValidationException(AuthenticationException ex) {
-
-        return ResponseEntity.badRequest().body("invalid credentials");
+    public ResponseEntity<Map<String, String>> handleValidationException(AuthenticationException ex) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("error", "invalid credentials");
+        return ResponseEntity.badRequest().body(errorMap);
     }
 
     // If duplicate user exists
@@ -44,9 +45,10 @@ public class GlobalExceptionHandler {
 
     // No user found
     @ExceptionHandler(NoSuchUserException.class)
-    public ResponseEntity<String> handleValidationException(NoSuchUserException ex) {
-
-        return ResponseEntity.badRequest().body("No such user exists");
+    public ResponseEntity<Map<String, String>> handleValidationException(NoSuchUserException ex) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("error", "No such user exists");
+        return ResponseEntity.badRequest().body(errorMap);
     }
 
 }
