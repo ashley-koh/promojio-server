@@ -7,4 +7,6 @@ import java.util.List;
 public interface CustomUserRepository {
 
     List<User> getLeaderboard();
+
+    void decrementUsersTierPoints();
 }

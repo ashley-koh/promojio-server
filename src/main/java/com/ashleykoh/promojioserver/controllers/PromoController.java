@@ -47,4 +47,12 @@ public class PromoController extends BaseController {
         return successResponse(promo);
     }
 
+    // Important Behavior: Can be called successfully multiple times in a row
+    // It guarantees no such document with user id exists
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> deletePromo(@PathVariable String id) {
+        promoRepository.deleteById(id);
+        return successResponse(null);
+    }
+
 }
