@@ -22,33 +22,4 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(errorMap);
     }
-
-    // Invalid Credentials
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Map<String, String>> handleValidationException(AuthenticationException ex) {
-        Map<String, String> errorMap = new HashMap<>();
-        errorMap.put("error", "invalid credentials");
-        return ResponseEntity.badRequest().body(errorMap);
-    }
-
-    // If duplicate user exists
-    @ExceptionHandler(DuplicateUserException.class)
-    public ResponseEntity<Map<String, String>> handleDuplicateUserException(DuplicateUserException ex) {
-        Map<String, String> errorMap = new HashMap<>();
-        if (ex.getMessage() != null) {
-            errorMap.put("error", ex.getMessage());
-        } else {
-            errorMap.put("error", "duplicate user exists");
-        }
-        return ResponseEntity.badRequest().body(errorMap);
-    }
-
-    // No user found
-    @ExceptionHandler(NoSuchUserException.class)
-    public ResponseEntity<Map<String, String>> handleValidationException(NoSuchUserException ex) {
-        Map<String, String> errorMap = new HashMap<>();
-        errorMap.put("error", "No such user exists");
-        return ResponseEntity.badRequest().body(errorMap);
-    }
-
 }
