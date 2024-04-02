@@ -1,6 +1,7 @@
 package com.ashleykoh.promojioserver.controllers;
 
 
+import com.ashleykoh.promojioserver.exceptions.ServerRuntimeException;
 import com.ashleykoh.promojioserver.models.Promo;
 import com.ashleykoh.promojioserver.repositories.PromoRepository;
 import jakarta.validation.Valid;
@@ -41,7 +42,7 @@ public class PromoController extends BaseController {
         Promo promo = promoRepository.findPromoById(id);
 
         if (promo == null) {
-            return promoDoesNotExistResponse();
+            throw new ServerRuntimeException("promo", "promo does not exist");
         }
 
         return successResponse(promo);

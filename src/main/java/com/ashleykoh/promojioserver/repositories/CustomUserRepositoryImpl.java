@@ -1,6 +1,8 @@
 package com.ashleykoh.promojioserver.repositories;
 
+import com.ashleykoh.promojioserver.exceptions.ServerRuntimeException;
 import com.ashleykoh.promojioserver.models.User;
+import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -24,5 +26,54 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
         query.limit(10);
 
         return mongoTemplate.find(query, User.class);
+    }
+
+    @Override
+    public void updateUserName(String id, String name) {
+        Query query = new Query(Criteria.where("id").is(id));
+        Update update = new Update();
+        update.set("name", name);
+
+        UpdateResult result = mongoTemplate.updateFirst(query, update, User.class);
+
+        if (result.getModifiedCount() == 0) {
+            throw new ServerRuntimeException("updated", "value unchanged");
+        }
+    }
+
+    @Override
+    public void updateUserPoints(String id, int points) {
+        Query query = new Query(Criteria.where("id").is(id));
+        Update update = new Update();
+        update.set("points", points);
+
+        UpdateResult result = mongoTemplate.updateFirst(query, update, User.class);
+
+        if (result.getModifiedCount() == 0) {
+            throw new ServerRuntimeException("updated", "value unchanged");
+        }
+    }
+
+    @Override
+    public void updateUserTierPoints(String id, int tierPoints) {
+        Query query = new Query(Criteria.where("id").is(id));
+        Update update = new Update();
+        update.set("tierPoints", tierPoints);
+
+        if (tierPoints < 1000) {
+            update.set("memberTiers", "bronze");
+        } else if (tierPoints < 2000) {
+            update.set("memberTiers", "silver");
+        } else if (tierPoints < 3000) {
+            update.set("memberTiers", "gold");
+        } else {
+            update.set("memberTiers", "platinum");
+        }
+
+        UpdateResult result = mongoTemplate.updateFirst(query, update, User.class);
+
+        if (result.getModifiedCount() == 0) {
+            throw new ServerRuntimeException("updated", "value unchanged");
+        }
     }
 }

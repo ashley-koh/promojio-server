@@ -1,5 +1,6 @@
 package com.ashleykoh.promojioserver.models;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
@@ -21,7 +22,9 @@ public class User {
     @NotBlank(message = "password required")
     private String password;
     private Binary profileImage;
+    @Min(value = 0, message = "points cannot be less than 0")
     private int points;
+    @Min(value = 0, message = "tierPoints cannot be less than 0")
     private int tierPoints;
     private String memberTier;
     @DBRef

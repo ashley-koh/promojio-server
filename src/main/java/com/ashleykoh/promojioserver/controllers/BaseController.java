@@ -32,26 +32,4 @@ public class BaseController {
 
         return ResponseEntity.badRequest().body(response);
     }
-
-    static ResponseEntity<Map<String, Object>> userDoesNotExistResponse() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("id", "no such user with given id");
-
-        return failResponse(data);
-    }
-
-    static ResponseEntity<Map<String, Object>> promoDoesNotExistResponse() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("id", "no such promo with given id");
-
-        return failResponse(data);
-    }
-
-
-    static ResponseEntity<Map<String, Object>> invalidCredentialsResponse() {
-        Map<String, Object> data = new HashMap<>();
-        data.put("credentials", "invalid");
-
-        return failResponse(data);
-    }
 }

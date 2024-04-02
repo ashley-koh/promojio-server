@@ -1,5 +1,6 @@
 package com.ashleykoh.promojioserver.models;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.bson.types.Binary;
@@ -25,7 +26,7 @@ public class Promo {
     @NotNull(message = "validity required")
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date validity;
-    @NotNull(message = "points required")
+    @Min(value = 0, message = "points cannot be less than 0")
     private int points;
 
     private String url;

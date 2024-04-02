@@ -4,6 +4,7 @@ import com.ashleykoh.promojioserver.controllers.forms.Login;
 import com.ashleykoh.promojioserver.controllers.forms.UserDetails;
 import com.ashleykoh.promojioserver.controllers.forms.UserPoints;
 import com.ashleykoh.promojioserver.controllers.forms.UserTierPoints;
+import com.ashleykoh.promojioserver.exceptions.ServerRuntimeException;
 import com.ashleykoh.promojioserver.models.User;
 import com.ashleykoh.promojioserver.repositories.CustomUserRepository;
 import com.ashleykoh.promojioserver.repositories.CustomUserRepositoryImpl;
@@ -30,6 +31,20 @@ public class UserController extends BaseController {
     @Autowired
     private CustomUserRepository customUserRepository;
 
+    private User validateUser(String id, String username, String password) {
+        User user = userRepository.findUserById(id);
+
+        // check if user does not exist
+        if (user == null) { throw new ServerRuntimeException("user", "user does not exist"); }
+
+        // check user credentials
+        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) {
+            throw new ServerRuntimeException("credentials", "invalid");
+        }
+
+        return user;
+    }
+
     @GetMapping("/leaderboard")
     public ResponseEntity<Map<String, Object>> getTierPointsLeaderboard() {
         List<User> users = customUserRepository.getLeaderboard();
@@ -55,10 +70,7 @@ public class UserController extends BaseController {
 
         // Throw exception if another user with same username exists
         if (duplicate != null) {
-            Map<String, String> data = new HashMap<>();
-            data.put("username", "username is taken");
-
-            return failResponse(data);
+            throw new ServerRuntimeException("username", "username is taken");
         }
 
         // save user obj
@@ -79,7 +91,7 @@ public class UserController extends BaseController {
 
         // if user with username does not exist or password is wrong
         if (user == null || !user.getPassword().equals(password)) {
-            return invalidCredentialsResponse();
+            throw new ServerRuntimeException("credentials", "invalid");
         }
 
         // create data obj with user
@@ -98,9 +110,7 @@ public class UserController extends BaseController {
 
         // If user exists
         if (user == null) {
-            Map<String, String> data = new HashMap<>();
-            data.put("id", "no such user with given id");
-            return failResponse(data);
+            throw new ServerRuntimeException("id", "no such user with given id");
         }
 
         // return user obj
@@ -119,25 +129,12 @@ public class UserController extends BaseController {
             @RequestHeader("password") String password,
             @RequestBody UserDetails userDetails
     ) {
-        // get user from database
-        User user = userRepository.findUserById(id);
+        validateUser(id, username, password);
 
-        // check if user does not exist
-        if (user == null) { return userDoesNotExistResponse(); }
+        customUserRepository.updateUserName(id, userDetails.getName());
 
-        // check user credentials
-        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) {
-            return invalidCredentialsResponse();
-        }
-
-        // if checks pass, update name of user
-        if (userDetails.getName() != null)  {
-            user.setName(userDetails.getName());
-        }
-
-        userRepository.save(user);
         Map<String, Object> data = new HashMap<>();
-        data.put("user", user);
+        data.put("updated", true);
         return successResponse(data);
     }
 
@@ -149,29 +146,12 @@ public class UserController extends BaseController {
             @RequestHeader("password") String password,
             @RequestBody UserPoints userPoints
     ) {
-        User user = userRepository.findUserById(id);
+        validateUser(id, username, password);
 
-        // check if user does not exist
-        if (user == null) { return userDoesNotExistResponse(); }
+        customUserRepository.updateUserPoints(id, userPoints.getPoints());
 
-        // check user credentials
-        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) {
-            return invalidCredentialsResponse();
-        }
-
-        int points = userPoints.getPoints();
-
-        if (points < 0) {
-            Map<String, String> data = new HashMap<>();
-            data.put("points", "points must be 0 and above");
-            return failResponse(data);
-        }
-
-        user.setPoints(points);
-
-        userRepository.save(user);
         Map<String, Object> data = new HashMap<>();
-        data.put("user", user);
+        data.put("updated", true);
         return successResponse(data);
     }
 
@@ -183,42 +163,12 @@ public class UserController extends BaseController {
             @RequestHeader("password") String password,
             @RequestBody UserTierPoints userTierPoints
     ) {
-        User user = userRepository.findUserById(id);
+        validateUser(id, username, password);
 
-        // check if user does not exist
-        if (user == null) { return userDoesNotExistResponse(); }
+        customUserRepository.updateUserTierPoints(id, userTierPoints.getTierPoints());
 
-        // check user credentials
-        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) {
-            return invalidCredentialsResponse();
-        }
-
-        int tierPoints = userTierPoints.getTierPoints();
-
-        // if tierPoints less than 0 return failed request
-        if (tierPoints < 0) {
-            Map<String, String> data = new HashMap<>();
-            data.put("tierPoints", "tierPoints must be 0 and above");
-            return failResponse(data);
-        }
-
-        // set user tier points
-        user.setTierPoints(tierPoints);
-
-        // set user member tier based on tier points
-        if (tierPoints < 1000) {
-            user.setMemberTier("bronze");
-        } else if (tierPoints < 2000) {
-            user.setMemberTier("silver");
-        } else if (tierPoints < 3000) {
-            user.setMemberTier("gold");
-        } else {
-            user.setMemberTier("platinum");
-        }
-
-        userRepository.save(user);
         Map<String, Object> data = new HashMap<>();
-        data.put("user", user);
+        data.put("updated", true);
         return successResponse(data);
     }
 
