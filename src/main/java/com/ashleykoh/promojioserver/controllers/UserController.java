@@ -5,14 +5,18 @@ import com.ashleykoh.promojioserver.controllers.forms.UserDetails;
 import com.ashleykoh.promojioserver.controllers.forms.UserPoints;
 import com.ashleykoh.promojioserver.controllers.forms.UserTierPoints;
 import com.ashleykoh.promojioserver.models.User;
+import com.ashleykoh.promojioserver.repositories.CustomUserRepository;
+import com.ashleykoh.promojioserver.repositories.CustomUserRepositoryImpl;
 import com.ashleykoh.promojioserver.repositories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Validated
@@ -22,6 +26,19 @@ public class UserController extends BaseController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CustomUserRepository customUserRepository;
+
+    @GetMapping("/leaderboard")
+    public ResponseEntity<Map<String, Object>> getTierPointsLeaderboard() {
+        List<User> users = customUserRepository.getLeaderboard();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("leaderboard", users);
+
+        return successResponse(data);
+    }
 
 //     Create a new user
 //     pass a user object
