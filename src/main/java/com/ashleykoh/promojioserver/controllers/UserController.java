@@ -168,8 +168,6 @@ public class UserController extends BaseController {
 
         // check if user does not exist
         if (user == null) { return userDoesNotExistResponse(); }
-        System.out.println(user.getUsername());
-        System.out.println(user.getPassword());
 
         // check user credentials
         if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) {
