@@ -1,5 +1,7 @@
 package com.ashleykoh.promojioserver.controllers;
 
+import com.ashleykoh.promojioserver.controllers.forms.UserDetails;
+import com.ashleykoh.promojioserver.exceptions.DuplicateUserException;
 import com.ashleykoh.promojioserver.exceptions.NoSuchUserException;
 import com.ashleykoh.promojioserver.models.User;
 import com.ashleykoh.promojioserver.repositories.UserRepository;
@@ -10,10 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 @Validated
 @RestController
@@ -23,34 +21,6 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    private static byte[] getSHA(String input) throws NoSuchAlgorithmException
-    {
-        // Static getInstance method is called with hashing SHA
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-
-        // digest() method called
-        // to calculate message digest of an input
-        // and return array of byte
-        return md.digest(input.getBytes(StandardCharsets.UTF_8));
-    }
-
-    private static String toHexString(byte[] hash)
-    {
-        // Convert byte array into signum representation
-        BigInteger number = new BigInteger(1, hash);
-
-        // Convert message digest into hex value
-        StringBuilder hexString = new StringBuilder(number.toString(16));
-
-        // Pad with leading zeros
-        while (hexString.length() < 64)
-        {
-            hexString.insert(0, '0');
-        }
-
-        return hexString.toString();
-    }
-
 //     Create a new user
 //     pass a user object
 //    {
@@ -59,25 +29,18 @@ public class UserController {
 //        "password": "password",
 //    }
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody @Valid User user) {
+    public User createUser(@RequestBody @Valid User user) throws DuplicateUserException {
 
-        try {
-            // Check if another user with same username exists
-            User duplicate = userRepository.findUsersByUsername(user.getUsername());
+        // Check if another user with same username exists
+        User duplicate = userRepository.findUsersByUsername(user.getUsername());
 
-            if (duplicate != null) {
-                return ResponseEntity.badRequest().body("username is taken");
-            }
-
-            // Hash password
-            user.setPassword(toHexString(getSHA(user.getPassword())));
-            userRepository.save(user);
-            return ResponseEntity.ok(user.getId());
-
-        } catch (NoSuchAlgorithmException ex) {
-            System.out.println("Exception thrown for incorrect algorithm: " + ex);
-            return ResponseEntity.badRequest().body("Server Error");
+        // Throw exception if another user with same username exists
+        if (duplicate != null) {
+            throw new DuplicateUserException("username is taken");
         }
+
+        // return user obj
+        return userRepository.save(user);
     }
 
 
@@ -86,24 +49,26 @@ public class UserController {
     @GetMapping("/{id}")
     public User getUser(@PathVariable("id") String id) throws NoSuchUserException {
 
+        // find User using id
         User user = userRepository.findUserById(id);
 
+        // If user exists
         if (user == null) { throw new NoSuchUserException(); }
 
+        // return user obj
         return user;
     }
 
 
     // Protected Route
-    //
-    // Update User details such as name and username
-    @PatchMapping("/{id}/name")
+    // Update User name
+    @PatchMapping("/{id}/details")
     public User updateUserDetails(
             @PathVariable String id,
             @RequestHeader("username") String username,
             @RequestHeader("password") String password,
-            @RequestBody @Valid User newUser
-    ) throws AuthenticationException {
+            @RequestBody UserDetails userDetails
+            ) throws AuthenticationException {
         // get user from database
         User user = userRepository.findUserById(id);
 
@@ -114,14 +79,15 @@ public class UserController {
         if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) { throw new AuthenticationException(); }
 
         // if checks pass, update name of user
-        if (newUser.getName() != null)  {
-            user.setName(newUser.getName());
+        if (userDetails.getName() != null)  {
+            user.setName(userDetails.getName());
         }
 
         userRepository.save(user);
         return user;
     }
 
+    // Protected Route
     @PatchMapping("/{id}/update/points")
     public User updateUserPoints(
             @PathVariable String id,
@@ -140,6 +106,7 @@ public class UserController {
         return user;
     }
 
+    // Protected Route
     @PatchMapping("/{id}/update/tierpoints")
     public User updateUserTierPoints(
             @PathVariable String id,
