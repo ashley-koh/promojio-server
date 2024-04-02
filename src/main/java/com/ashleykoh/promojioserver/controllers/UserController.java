@@ -1,17 +1,12 @@
 package com.ashleykoh.promojioserver.controllers;
 
-import com.ashleykoh.promojioserver.controllers.forms.Login;
-import com.ashleykoh.promojioserver.controllers.forms.UserDetails;
-import com.ashleykoh.promojioserver.controllers.forms.UserPoints;
-import com.ashleykoh.promojioserver.controllers.forms.UserTierPoints;
+import com.ashleykoh.promojioserver.controllers.forms.*;
 import com.ashleykoh.promojioserver.exceptions.ServerRuntimeException;
 import com.ashleykoh.promojioserver.models.User;
 import com.ashleykoh.promojioserver.repositories.CustomUserRepository;
-import com.ashleykoh.promojioserver.repositories.CustomUserRepositoryImpl;
 import com.ashleykoh.promojioserver.repositories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +26,7 @@ public class UserController extends BaseController {
     @Autowired
     private CustomUserRepository customUserRepository;
 
-    private User validateUser(String id, String username, String password) {
+    private void validateUser(String id, String username, String password) {
         User user = userRepository.findUserById(id);
 
         // check if user does not exist
@@ -42,7 +37,6 @@ public class UserController extends BaseController {
             throw new ServerRuntimeException("credentials", "invalid");
         }
 
-        return user;
     }
 
     @GetMapping("/leaderboard")
@@ -171,6 +165,23 @@ public class UserController extends BaseController {
         data.put("updated", true);
         return successResponse(data);
     }
+
+    @PostMapping("/{id}/add/promo")
+    public ResponseEntity<Map<String, Object>> addPromoToUserPromos(
+            @PathVariable String id,
+            @RequestHeader("username") String username,
+            @RequestHeader("password") String password,
+            @RequestBody AddPromoToUserForm promoToUserForm
+            ) {
+        validateUser(id, username, password);
+
+        customUserRepository.addPromoToUser(id, promoToUserForm.getPromoId());
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("updated", true);
+        return successResponse(data);
+    }
+
 
     // Important Behavior: Can be called successfully multiple times in a row
     // It guarantees no such document with user id exists

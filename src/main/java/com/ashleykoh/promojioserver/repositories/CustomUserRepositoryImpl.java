@@ -1,6 +1,7 @@
 package com.ashleykoh.promojioserver.repositories;
 
 import com.ashleykoh.promojioserver.exceptions.ServerRuntimeException;
+import com.ashleykoh.promojioserver.models.Promo;
 import com.ashleykoh.promojioserver.models.User;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,4 +77,26 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
             throw new ServerRuntimeException("updated", "value unchanged");
         }
     }
+
+    @Override
+    public void addPromoToUser(String id, String promo_id) {
+        Query promoQuery = new Query(Criteria.where("id").is(promo_id));
+        Promo promo = mongoTemplate.findOne(promoQuery, Promo.class);
+
+        if (promo == null) {
+            throw new ServerRuntimeException("promoId", "promo does not exist");
+        }
+
+        Query userQuery = new Query(Criteria.where("id").is(id));
+        Update userUpdate = new Update();
+        userUpdate.push("promos", promo);
+
+        UpdateResult result = mongoTemplate.updateFirst(userQuery, userUpdate, User.class);
+
+        if (result.getModifiedCount() == 0) {
+            throw new ServerRuntimeException("updated", "value unchanged");
+        }
+    }
+
+
 }
