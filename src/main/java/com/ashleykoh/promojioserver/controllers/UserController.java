@@ -82,7 +82,6 @@ public class UserController {
 
 
     // Single User Operations
-
     // Get User from id
     @GetMapping("/{id}")
     public User getUser(@PathVariable("id") String id) throws NoSuchUserException {
@@ -95,38 +94,65 @@ public class UserController {
     }
 
 
+    // Protected Route
+    //
     // Update User details such as name and username
-    @PatchMapping("/{id}/details")
-    public User updateUserDetails(@PathVariable String id, @RequestBody @Valid User newUser) throws AuthenticationException {
+    @PatchMapping("/{id}/name")
+    public User updateUserDetails(
+            @PathVariable String id,
+            @RequestHeader("username") String username,
+            @RequestHeader("password") String password,
+            @RequestBody @Valid User newUser
+    ) throws AuthenticationException {
+        // get user from database
         User user = userRepository.findUserById(id);
 
+        // check if user exists
         if (user == null) { throw new NoSuchUserException(); }
-        if (!newUser.getPassword().equals(user.getPassword())) { throw new AuthenticationException(); }
 
+        // check user credentials
+        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) { throw new AuthenticationException(); }
 
+        // if checks pass, update name of user
         if (newUser.getName() != null)  {
             user.setName(newUser.getName());
         }
 
-        if (newUser.getUsername() != null) {
-            user.setUsername(newUser.getUsername());
-        }
-
-        User updatedUser = userRepository.save(user);
-//        System.out.println(updatedUser);
+        userRepository.save(user);
         return user;
     }
 
     @PatchMapping("/{id}/update/points")
-    public User updateUserPoints(@PathVariable String id, @RequestBody User newUser) throws AuthenticationException {
+    public User updateUserPoints(
+            @PathVariable String id,
+            @RequestHeader("username") String username,
+            @RequestHeader("password") String password,
+            @RequestBody User newUser
+    ) throws AuthenticationException {
         User user = userRepository.findUserById(id);
 
         if (user == null) { throw new NoSuchUserException(); }
-        if (!newUser.getPassword().equals(user.getPassword())) { throw new AuthenticationException(); }
-
-        System.out.println(user);
+        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) { throw new AuthenticationException(); }
 
         user.setPoints(newUser.getPoints());
+
+        userRepository.save(user);
+        return user;
+    }
+
+    @PatchMapping("/{id}/update/tierpoints")
+    public User updateUserTierPoints(
+            @PathVariable String id,
+            @RequestHeader("username") String username,
+            @RequestHeader("password") String password,
+            @RequestBody User newUser
+    ) throws AuthenticationException {
+        User user = userRepository.findUserById(id);
+
+        if (user == null) { throw new NoSuchUserException(); }
+        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) { throw new AuthenticationException(); }
+
+        user.setTierPoints(newUser.getTierPoints());
 
         userRepository.save(user);
         return user;
