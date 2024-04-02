@@ -1,5 +1,6 @@
 package com.ashleykoh.promojioserver.controllers;
 
+import com.ashleykoh.promojioserver.controllers.forms.Login;
 import com.ashleykoh.promojioserver.controllers.forms.UserDetails;
 import com.ashleykoh.promojioserver.controllers.forms.UserPoints;
 import com.ashleykoh.promojioserver.controllers.forms.UserTierPoints;
@@ -30,7 +31,7 @@ public class UserController extends BaseController {
 //        "password": "password",
 //    }
     @PostMapping("/register")
-    public ResponseEntity<Map<String, Object>> createUser(@RequestBody @Valid User user) {
+    public ResponseEntity<Map<String, Object>> registerUser(@RequestBody @Valid User user) {
 
         // Check if another user with same username exists
         User duplicate = userRepository.findUsersByUsername(user.getUsername());
@@ -51,7 +52,25 @@ public class UserController extends BaseController {
         return successResponse(data);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> loginUser(@RequestBody Login login) {
 
+        String username = login.getUsername();
+        String password = login.getPassword();
+
+        User user = userRepository.findUsersByUsername(username);
+
+        // if user with username does not exist or password is wrong
+        if (user == null || !user.getPassword().equals(password)) {
+            return invalidCredentialsResponse();
+        }
+
+        // create data obj with user
+        Map<String, Object> data = new HashMap<>();
+        data.put("user", user);
+
+        return successResponse(data);
+    }
 
     // Single User Operations
     // Get User from id
