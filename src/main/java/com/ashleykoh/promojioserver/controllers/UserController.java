@@ -18,7 +18,7 @@ import java.util.Map;
 @Validated
 @RestController
 @RequestMapping("/user")
-public class UserController extends BasicController {
+public class UserController extends BaseController {
 
     @Autowired
     private UserRepository userRepository;

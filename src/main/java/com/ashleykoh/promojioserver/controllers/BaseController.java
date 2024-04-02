@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BasicController {
+public class BaseController {
 
     // Following Response templates follow JSend Response Format
     // https://github.com/omniti-labs/jsend
