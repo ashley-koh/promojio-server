@@ -20,7 +20,7 @@ public class Promo {
     private String bigLabel;
     @NotBlank(message = "short description required")
     private String shortDescription;
-    @NotBlank(message = "short description required")
+    @NotBlank(message = "long description required")
     private String longDescription;
     @NotNull(message = "validity required")
     @DateTimeFormat(pattern = "dd-MM-yyyy")
@@ -30,7 +30,9 @@ public class Promo {
 
     private String url;
 
-    public Promo() {}
+    public Promo() {
+        this.points = 0;
+    }
 
     public String getId() {
         return id;

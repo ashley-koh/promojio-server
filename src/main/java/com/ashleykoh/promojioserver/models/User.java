@@ -27,16 +27,13 @@ public class User {
     @DBRef
     private List<Promo> promos = new ArrayList<>();
 
-    public User() {}
-//    public User(String username, String password) {
-//        this.username = username;
-//        this.password = password;
-//        this.name = "";
-//        this.profileImage = null;
-//        this.points = 0;
-//        this.tierPoints = 0;
-//        this.memberTier = "bronze";
-//    }
+    public User() {
+        this.name = "";
+        this.profileImage = null;
+        this.points = 0;
+        this.tierPoints = 0;
+        this.memberTier = "bronze";
+    }
 
     public String getId() {
         return id;
