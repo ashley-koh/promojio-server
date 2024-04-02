@@ -40,6 +40,13 @@ public class BaseController {
         return failResponse(data);
     }
 
+    static ResponseEntity<Map<String, Object>> promoDoesNotExistResponse() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("id", "no such promo with given id");
+
+        return failResponse(data);
+    }
+
 
     static ResponseEntity<Map<String, Object>> invalidCredentialsResponse() {
         Map<String, Object> data = new HashMap<>();

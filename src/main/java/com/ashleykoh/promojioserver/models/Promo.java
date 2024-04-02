@@ -1,21 +1,31 @@
 package com.ashleykoh.promojioserver.models;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 public class Promo {
     @Id
     private String id;
+    @NotBlank(message = "brand required")
     private String brand;
     private Binary logoImage;
+    @NotNull(message = "value required")
     private int value;
     private String symbol;
+    @NotBlank(message = "short description required")
     private String shortDescription;
     private String longDescription;
+    @NotNull(message = "terms and conditions required")
     private String[] termsAndConditions;
+    @NotNull(message = "validity required")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date validity;
+    @NotNull(message = "points required")
     private int points;
 
     public Promo() {}
