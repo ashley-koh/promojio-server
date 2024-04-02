@@ -159,7 +159,15 @@ public class UserController extends BaseController {
             return invalidCredentialsResponse();
         }
 
-        user.setPoints(userPoints.getPoints());
+        int points = userPoints.getPoints();
+
+        if (points < 0) {
+            Map<String, String> data = new HashMap<>();
+            data.put("points", "points must be 0 and above");
+            return failResponse(data);
+        }
+
+        user.setPoints(points);
 
         userRepository.save(user);
         Map<String, Object> data = new HashMap<>();

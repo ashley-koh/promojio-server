@@ -25,16 +25,4 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
 
         return mongoTemplate.find(query, User.class);
     }
-
-    @Override
-    public void decrementUsersTierPoints() {
-        // find all documents that have tierPoints more than 1
-        // this prevents tierPoints from going negative
-        Query query = new Query(Criteria.where("tierPoints").gte(1));
-
-        Update update = new Update();
-        update.inc("tierPoints", -1); // increment by -1
-
-        mongoTemplate.updateMulti(query, update, User.class);
-    }
 }
