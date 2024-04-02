@@ -10,7 +10,7 @@
 ## Installation
 1. Select `Get from Version Control` when creating new project.
 2. Paste `https://github.com/ashley-koh/promojio-server.git` and Select `Clone`
-3. Right-click 'compose.yml' and select `Run 'compose.yml': Compose...`
+3. Right-click `compose.yml` and select `Run 'compose.yml': Compose...`
 4. An instance of MongoDB and MongoExpress should now be running in the background
 5. Build and Run this git repo in Intellij Idea to run this server
 6. Start Requesting!
