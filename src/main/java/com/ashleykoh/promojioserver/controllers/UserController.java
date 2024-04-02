@@ -29,7 +29,7 @@ public class UserController extends BaseController {
 //        "username": "john_doe",
 //        "password": "password",
 //    }
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> createUser(@RequestBody @Valid User user) {
 
         // Check if another user with same username exists
@@ -50,6 +50,7 @@ public class UserController extends BaseController {
 
         return successResponse(data);
     }
+
 
 
     // Single User Operations
@@ -148,52 +149,34 @@ public class UserController extends BaseController {
             return invalidCredentialsResponse();
         }
 
-        user.setTierPoints(userTierPoints.getTierPoints());
+        int tierPoints = userTierPoints.getTierPoints();
 
-        if userTierPoints.getTierPoints();
+        // if tierPoints less than 0 return failed request
+        if (tierPoints < 0) {
+            Map<String, String> data = new HashMap<>();
+            data.put("tierPoints", "tierPoints must be 0 and above");
+            return failResponse(data);
+        }
+
+        // set user tier points
+        user.setTierPoints(tierPoints);
+
+        // set user member tier based on tier points
+        if (tierPoints < 1000) {
+            user.setMemberTier("bronze");
+        } else if (tierPoints < 2000) {
+            user.setMemberTier("silver");
+        } else if (tierPoints < 3000) {
+            user.setMemberTier("gold");
+        } else {
+            user.setMemberTier("platinum");
+        }
 
         userRepository.save(user);
         Map<String, Object> data = new HashMap<>();
         data.put("user", user);
         return successResponse(data);
     }
-
-    // Login
-    // Register
-
-
-//    @PatchMapping("/{id}/update/membertier")
-//    public ResponseEntity<Map<String, Object>> updateUserMemberTier(
-//            @PathVariable String id,
-//            @RequestHeader("username") String username,
-//            @RequestHeader("password") String password,
-//            @RequestBody UserMemberTier userMemberTier
-//    ) {
-//        User user = userRepository.findUserById(id);
-//
-//        // check if user does not exist
-//        if (user == null) { return userDoesNotExistResponse(); }
-//
-//        // check user credentials
-//        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) {
-//            return invalidCredentialsResponse();
-//        }
-//
-//        String memberTier = userMemberTier.getMemberTier();
-//
-//        if (memberTier.equals("bronze") || memberTier.equals("silver") || memberTier.equals("gold") || memberTier.equals("platinum")) {
-//            user.setMemberTier(memberTier);
-//        } else {
-//            Map<String, Object> data = new HashMap<>();
-//            data.put("memberTier", "invalid option (bronze/silver/gold/platinum)");
-//            return failResponse(data);
-//        }
-//
-//        userRepository.save(user);
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("user", user);
-//        return successResponse(data);
-//    }
 
     // Important Behavior: Can be called successfully multiple times in a row
     // It guarantees no such document with user id exists
