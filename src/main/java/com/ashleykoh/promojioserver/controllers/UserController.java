@@ -1,8 +1,9 @@
 package com.ashleykoh.promojioserver.controllers;
 
 import com.ashleykoh.promojioserver.controllers.forms.UserDetails;
-import com.ashleykoh.promojioserver.exceptions.DuplicateUserException;
-import com.ashleykoh.promojioserver.exceptions.NoSuchUserException;
+import com.ashleykoh.promojioserver.controllers.forms.UserMemberTier;
+import com.ashleykoh.promojioserver.controllers.forms.UserPoints;
+import com.ashleykoh.promojioserver.controllers.forms.UserTierPoints;
 import com.ashleykoh.promojioserver.models.User;
 import com.ashleykoh.promojioserver.repositories.UserRepository;
 import jakarta.validation.Valid;
@@ -11,12 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.AuthenticationException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Validated
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends BasicController {
 
     @Autowired
     private UserRepository userRepository;
@@ -29,54 +31,68 @@ public class UserController {
 //        "password": "password",
 //    }
     @PostMapping
-    public User createUser(@RequestBody @Valid User user) throws DuplicateUserException {
+    public ResponseEntity<Map<String, Object>> createUser(@RequestBody @Valid User user) {
 
         // Check if another user with same username exists
         User duplicate = userRepository.findUsersByUsername(user.getUsername());
 
         // Throw exception if another user with same username exists
         if (duplicate != null) {
-            throw new DuplicateUserException("username is taken");
+            Map<String, String> data = new HashMap<>();
+            data.put("username", "username is taken");
+
+            return failResponse(data);
         }
 
-        // return user obj
-        return userRepository.save(user);
+        // save user obj
+        userRepository.save(user);
+        Map<String, Object> data = new HashMap<>();
+        data.put("user", user);
+
+        return successResponse(data);
     }
 
 
     // Single User Operations
     // Get User from id
     @GetMapping("/{id}")
-    public User getUser(@PathVariable("id") String id) throws NoSuchUserException {
-
+    public ResponseEntity<Map<String, Object>> getUser(@PathVariable("id") String id) {
         // find User using id
         User user = userRepository.findUserById(id);
 
         // If user exists
-        if (user == null) { throw new NoSuchUserException(); }
+        if (user == null) {
+            Map<String, String> data = new HashMap<>();
+            data.put("id", "no such user with given id");
+            return failResponse(data);
+        }
 
         // return user obj
-        return user;
+        Map<String, Object> data = new HashMap<>();
+        data.put("user", user);
+        return successResponse(data);
     }
 
 
     // Protected Route
     // Update User name
-    @PatchMapping("/{id}/details")
-    public User updateUserDetails(
+    @PatchMapping("/{id}/update/details")
+    public ResponseEntity<Map<String, Object>> updateUserDetails(
             @PathVariable String id,
             @RequestHeader("username") String username,
             @RequestHeader("password") String password,
             @RequestBody UserDetails userDetails
-            ) throws AuthenticationException {
+    ) {
         // get user from database
         User user = userRepository.findUserById(id);
 
-        // check if user exists
-        if (user == null) { throw new NoSuchUserException(); }
+        // check if user does not exist
+        if (user == null) { return userDoesNotExistResponse(); }
 
         // check user credentials
-        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) { throw new AuthenticationException(); }
+        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) {
+            return invalidCredentialsResponse();
+        }
 
         // if checks pass, update name of user
         if (userDetails.getName() != null)  {
@@ -84,53 +100,104 @@ public class UserController {
         }
 
         userRepository.save(user);
-        return user;
+        Map<String, Object> data = new HashMap<>();
+        data.put("user", user);
+        return successResponse(data);
     }
 
     // Protected Route
     @PatchMapping("/{id}/update/points")
-    public User updateUserPoints(
+    public ResponseEntity<Map<String, Object>> updateUserPoints(
             @PathVariable String id,
             @RequestHeader("username") String username,
             @RequestHeader("password") String password,
-            @RequestBody User newUser
-    ) throws AuthenticationException {
+            @RequestBody UserPoints userPoints
+    ) {
         User user = userRepository.findUserById(id);
 
-        if (user == null) { throw new NoSuchUserException(); }
-        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) { throw new AuthenticationException(); }
+        // check if user does not exist
+        if (user == null) { return userDoesNotExistResponse(); }
 
-        user.setPoints(newUser.getPoints());
+        // check user credentials
+        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) {
+            return invalidCredentialsResponse();
+        }
+
+        user.setPoints(userPoints.getPoints());
 
         userRepository.save(user);
-        return user;
+        Map<String, Object> data = new HashMap<>();
+        data.put("user", user);
+        return successResponse(data);
     }
 
     // Protected Route
     @PatchMapping("/{id}/update/tierpoints")
-    public User updateUserTierPoints(
+    public ResponseEntity<Map<String, Object>> updateUserTierPoints(
             @PathVariable String id,
             @RequestHeader("username") String username,
             @RequestHeader("password") String password,
-            @RequestBody User newUser
-    ) throws AuthenticationException {
+            @RequestBody UserTierPoints userTierPoints
+    ) {
         User user = userRepository.findUserById(id);
 
-        if (user == null) { throw new NoSuchUserException(); }
-        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) { throw new AuthenticationException(); }
+        // check if user does not exist
+        if (user == null) { return userDoesNotExistResponse(); }
 
-        user.setTierPoints(newUser.getTierPoints());
+        // check user credentials
+        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) {
+            return invalidCredentialsResponse();
+        }
+
+        user.setTierPoints(userTierPoints.getTierPoints());
 
         userRepository.save(user);
-        return user;
+        Map<String, Object> data = new HashMap<>();
+        data.put("user", user);
+        return successResponse(data);
+    }
+
+    @PatchMapping("/{id}/update/membertier")
+    public ResponseEntity<Map<String, Object>> updateUserMemberTier(
+            @PathVariable String id,
+            @RequestHeader("username") String username,
+            @RequestHeader("password") String password,
+            @RequestBody UserMemberTier userMemberTier
+    ) {
+        User user = userRepository.findUserById(id);
+
+        // check if user does not exist
+        if (user == null) { return userDoesNotExistResponse(); }
+        System.out.println(user.getUsername());
+        System.out.println(user.getPassword());
+
+        // check user credentials
+        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) {
+            return invalidCredentialsResponse();
+        }
+
+        String memberTier = userMemberTier.getMemberTier();
+
+        if (memberTier.equals("bronze") || memberTier.equals("silver") || memberTier.equals("gold") || memberTier.equals("platinum")) {
+            user.setMemberTier(memberTier);
+        } else {
+            Map<String, Object> data = new HashMap<>();
+            data.put("memberTier", "invalid option (bronze/silver/gold/platinum)");
+            return failResponse(data);
+        }
+
+        userRepository.save(user);
+        Map<String, Object> data = new HashMap<>();
+        data.put("user", user);
+        return successResponse(data);
     }
 
     // Important Behavior: Can be called successfully multiple times in a row
     // It guarantees no such document with user id exists
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable String id) {
+    public ResponseEntity<Map<String, Object>> deleteUser(@PathVariable String id) {
         userRepository.deleteById(id);
-        return ResponseEntity.ok("id no longer exists");
+        return successResponse(null);
     }
 
 }
