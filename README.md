@@ -1,7 +1,5 @@
 # PromoJio Server  
 
----
-
 ## Requirements
 
 1. [Intellij Idea Community Edition](https://www.jetbrains.com/idea/download/?section=windows) (Scroll Down to black banner)
@@ -17,7 +15,7 @@
 
 ## Usage
 
-Use this function to get JSON from URL
+Use this function to get JSON from URL (not complete)
 ```java
 public static JSONObject getJSONObjectFromURL(String urlString) throws IOException, JSONException {
     HttpURLConnection urlConnection = null;
