@@ -1,10 +1,22 @@
 version: "3.8"
 
 services:
+  promojio-server:
+    image: ashleykoh24/promojio-server
+    container_name: promojio-server
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      mongodb:
+        condition: service_started
+
   mongodb:
     image: mongo
     container_name: mongodb
     restart: always
+    expose:
+      - "27017"
     ports:
       - "27017:27017"
     volumes:
