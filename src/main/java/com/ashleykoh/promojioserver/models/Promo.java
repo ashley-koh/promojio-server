@@ -26,6 +26,7 @@ public class Promo {
     @NotNull(message = "validity required")
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date validity;
+    @NotBlank(message = "points required")
     @Min(value = 0, message = "points cannot be less than 0")
     private int points;
 

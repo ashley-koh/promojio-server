@@ -107,12 +107,20 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
         Update userUpdate = new Update();
 
         Query promoWithinUserQuery = new Query().addCriteria(Criteria.where("$id").is(new ObjectId(promo_id)));
-        userUpdate.pull("promos", promoWithinUserQuery);
+        userUpdate.pull("promos", promoWithinUserQuery); // remove promo from user document
 
         UpdateResult result = mongoTemplate.updateFirst(userQuery, userUpdate, User.class);
 
         if (result.getModifiedCount() == 0) {
             throw new ServerRuntimeException("updated", "user does not have promo");
+        } else {
+            Promo promo = mongoTemplate.findById(promo_id, Promo.class);
+
+            if (promo == null) {
+                throw new ServerRuntimeException("updated", "promo no longer exists");
+            }
+
+            updateUserPoints(id, promo.getPoints()); // rewards points from promo to user
         }
     }
 }

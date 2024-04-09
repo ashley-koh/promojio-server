@@ -11,4 +11,5 @@ public interface PromoRepository extends MongoRepository<Promo, String> {
     Promo findPromosByBrand(String brand);
     Promo findPromosByValidityBefore(Date date);
 
+    Promo deletePromoById(String id);
 }
