@@ -237,7 +237,7 @@ Updates the `tierPoints`. Remember to set the headers of the request.
 }
 ```
 
-### Update User Tier Points [POST] `/user/{id}/add/promo`
+### Add Promo to User collection [POST] `/user/{id}/add/promo`
 
 Attaches a promo to user based on the promo id.
 
