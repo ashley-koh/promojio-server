@@ -38,7 +38,7 @@ public class PromoController extends BaseController {
     // Returns a random promo within a range of min and max
     // If no promos exist in the range, return the next closest promo
     @GetMapping("/random")
-    public ResponseEntity<Map<String, Object>> createPromo(
+    public ResponseEntity<Map<String, Object>> getRandomPromo(
             @RequestParam(defaultValue = "0") String min,
             @RequestParam(required = false) String max
     ) {

@@ -161,15 +161,17 @@ Return any random promo within a range of 21-50 points:
 ```json
 {
   "data": {
-    "id": "661359554a0fcb17ed21f5c9",
-    "brand": "nike",
-    "logoImage": null,
-    "smallLabel": "one for one",
-    "bigLabel": "10",
-    "shortDescription": "Brand New",
-    "longDescription": "Longggggg Description",
-    "validity": "2025-02-04T00:00:00.000+00:00",
-    "points": 20
+    "promo": {
+      "id": "66150bdc3759f37bdd0d5740",
+      "brand": "nike",
+      "logoImage": null,
+      "smallLabel": "off",
+      "bigLabel": "10",
+      "shortDescription": "Free stuff",
+      "longDescription": "Lalaland",
+      "validity": "2025-02-04T00:00:00.000+00:00",
+      "points": 25
+    }
   },
   "status": "success"
 }
