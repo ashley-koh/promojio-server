@@ -98,14 +98,14 @@ public class UserController extends BaseController {
     // Single User Operations
     // Get User from id
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getUser(@PathVariable("id") String id) {
+    public ResponseEntity<Map<String, Object>> getUser(
+            @PathVariable("id") String id,
+            @RequestHeader("username") String username,
+            @RequestHeader("password") String password
+    ) {
+        validateUser(id, username, password);
         // find User using id
         User user = userRepository.findUserById(id);
-
-        // If user exists
-        if (user == null) {
-            throw new ServerRuntimeException("id", "no such user with given id");
-        }
 
         // return user obj
         Map<String, Object> data = new HashMap<>();
@@ -186,7 +186,12 @@ public class UserController extends BaseController {
     // Important Behavior: Can be called successfully multiple times in a row
     // It guarantees no such document with user id exists
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> deleteUser(@PathVariable String id) {
+    public ResponseEntity<Map<String, Object>> deleteUser(
+            @PathVariable String id,
+            @RequestHeader("username") String username,
+            @RequestHeader("password") String password
+    ) {
+        validateUser(id, username, password);
         userRepository.deleteById(id);
         return successResponse(null);
     }
