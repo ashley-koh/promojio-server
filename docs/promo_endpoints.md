@@ -38,7 +38,7 @@ Create a new Promo based on fields
 ```json
 {
     "data": {
-        "user": {
+        "promo": {
             "id": "661359554a0fcb17ed21f5c9",
             "brand": "nike",
             "logoImage": null,
@@ -80,31 +80,33 @@ _None_
 #### Example JSON Response (Success)
 ```json
 {
-    "data": [
-        {
-            "id": "661359554a0fcb17ed21f5c9",
-            "brand": "nike",
-            "logoImage": null,
-            "smallLabel": "one for one",
-            "bigLabel": "10",
-            "shortDescription": "Brand New",
-            "longDescription": "Longggggg Description",
-            "validity": "2025-02-04T00:00:00.000+00:00",
-            "points": 20
-        },
-        {
-            "id": "66135b0b4a0fcb17ed21f5ca",
-            "brand": "adidas",
-            "logoImage": null,
-            "smallLabel": "get 1 free",
-            "bigLabel": "buy three",
-            "shortDescription": "Great Singapore Sale",
-            "longDescription": "Longggggg Description",
-            "validity": "2025-04-02T00:00:00.000+00:00",
-            "points": 20
-        }
-    ],
-    "status": "success"
+  "data": {
+    "promos": [
+      {
+        "id": "661359554a0fcb17ed21f5c9",
+        "brand": "nike",
+        "logoImage": null,
+        "smallLabel": "one for one",
+        "bigLabel": "10",
+        "shortDescription": "Brand New",
+        "longDescription": "Longggggg Description",
+        "validity": "2025-02-04T00:00:00.000+00:00",
+        "points": 20
+      },
+      {
+        "id": "66135b0b4a0fcb17ed21f5ca",
+        "brand": "adidas",
+        "logoImage": null,
+        "smallLabel": "get 1 free",
+        "bigLabel": "buy three",
+        "shortDescription": "Great Singapore Sale",
+        "longDescription": "Longggggg Description",
+        "validity": "2025-04-02T00:00:00.000+00:00",
+        "points": 20
+      }
+    ]
+  },
+  "status": "success"
 }
 ```
 

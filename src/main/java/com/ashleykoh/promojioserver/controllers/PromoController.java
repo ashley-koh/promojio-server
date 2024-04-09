@@ -26,7 +26,7 @@ public class PromoController extends BaseController {
     public ResponseEntity<Map<String, Object>> createPromo(@RequestBody @Valid Promo promo) {
         promoRepository.save(promo);
         Map<String, Object> data = new HashMap<>();
-        data.put("user", promo);
+        data.put("promo", promo);
 
         return successResponse(data);
     }
@@ -34,7 +34,10 @@ public class PromoController extends BaseController {
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllPromos() {
         List<Promo> promos = promoRepository.findAll();
-        return successResponse(promos);
+        Map<String, List<Promo>> data = new HashMap<>();
+        data.put("promos", promos);
+
+        return successResponse(data);
     }
 
     @GetMapping("/{id}")
