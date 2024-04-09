@@ -61,14 +61,16 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
         Update update = new Update();
         update.set("tierPoints", tierPoints);
 
+        String memberTier = "memberTier";
+
         if (tierPoints < 1000) {
-            update.set("memberTier", "bronze");
+            update.set(memberTier, "bronze");
         } else if (tierPoints < 2000) {
-            update.set("memberTiers", "silver");
+            update.set(memberTier, "silver");
         } else if (tierPoints < 3000) {
-            update.set("memberTiers", "gold");
+            update.set(memberTier, "gold");
         } else {
-            update.set("memberTiers", "platinum");
+            update.set(memberTier, "platinum");
         }
 
         UpdateResult result = mongoTemplate.updateFirst(query, update, User.class);
