@@ -21,23 +21,7 @@ import java.util.Map;
 public class UserController extends BaseController {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private CustomUserRepository customUserRepository;
-
-    private void validateUser(String id, String username, String password) {
-        User user = userRepository.findUserById(id);
-
-        // check if user does not exist
-        if (user == null) { throw new ServerRuntimeException("user", "user does not exist"); }
-
-        // check user credentials
-        if (!username.equals(user.getUsername()) || !password.equals(user.getPassword())) {
-            throw new ServerRuntimeException("credentials", "invalid");
-        }
-
-    }
 
     @GetMapping("/leaderboard")
     public ResponseEntity<Map<String, Object>> getTierPointsLeaderboard() {

@@ -3,6 +3,7 @@ package com.ashleykoh.promojioserver.controllers;
 
 import com.ashleykoh.promojioserver.exceptions.ServerRuntimeException;
 import com.ashleykoh.promojioserver.models.Promo;
+import com.ashleykoh.promojioserver.repositories.CustomPromoRepositoryImpl;
 import com.ashleykoh.promojioserver.repositories.PromoRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,26 @@ public class PromoController extends BaseController {
     @Autowired
     private PromoRepository promoRepository;
 
+    @Autowired
+    private CustomPromoRepositoryImpl customPromoRepository;
+
     @PostMapping
     public ResponseEntity<Map<String, Object>> createPromo(@RequestBody @Valid Promo promo) {
         promoRepository.save(promo);
+        Map<String, Object> data = new HashMap<>();
+        data.put("promo", promo);
+
+        return successResponse(data);
+    }
+
+    // Returns a random promo within a range of min and max
+    // If no promos exist in the range, return the next closest promo
+    @GetMapping("/random")
+    public ResponseEntity<Map<String, Object>> createPromo(
+            @RequestParam(defaultValue = "0") String min,
+            @RequestParam(required = false) String max
+    ) {
+        Promo promo = customPromoRepository.getRandomPromo(min, max);
         Map<String, Object> data = new HashMap<>();
         data.put("promo", promo);
 
