@@ -10,9 +10,9 @@ Creates a new user based on `username`, `password` and `name` (optional).
 
 | Name       | Type   | Section | Remarks  |
 |------------|--------|---------|----------|
-| `username` | String | body    | unique   |
-| `password` | String | body    | hashed   |
-| `name`     | String | body    | optional |
+| `username` | String | _body_  | unique   |
+| `password` | String | _body_  | hashed   |
+| `name`     | String | _body_  | optional |
 
 
 #### Example JSON Request
@@ -53,8 +53,8 @@ Authenticate users based on their credentials. Returns their user object.
 
 | Name       | Type   | Section | Remarks |
 |------------|--------|---------|---------|
-| `username` | String | body    | _none_  |
-| `password` | String | body    | _none_  |
+| `username` | String | _body_  | _none_  |
+| `password` | String | _body_  | _none_  |
 
 
 #### Example JSON Request
@@ -94,7 +94,7 @@ Get a user by their database id. Replace `{id}` with the id of the user when cal
 
 | Name | Type   | Section | Remarks |
 |------|--------|---------|---------|
-| `id` | String | Path    | _none_  |
+| `id` | String | _path_  | _none_  |
 
 
 #### Example Request URI

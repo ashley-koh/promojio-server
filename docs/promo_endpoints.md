@@ -10,13 +10,13 @@ Create a new Promo based on fields
 
 | Name               | Type    | Section | Remarks                      |
 |--------------------|---------|---------|------------------------------|
-| `brand`            | String  | body    | required                     |
-| `smallLabel`       | String  | body    | required                     |
-| `bigLabel`         | String  | body    | required                     |
-| `shortDescription` | String  | body    | required                     |
-| `longDescription`  | String  | body    | required                     |
-| `validity`         | String  | body    | required, format: YYYY-MM-DD |
-| `points`           | Integer | body    | required                     |
+| `brand`            | String  | _body_  | required                     |
+| `smallLabel`       | String  | _body_  | required                     |
+| `bigLabel`         | String  | _body_  | required                     |
+| `shortDescription` | String  | _body_  | required                     |
+| `longDescription`  | String  | _body_  | required                     |
+| `validity`         | String  | _body_  | required, format: YYYY-MM-DD |
+| `points`           | Integer | _body_  | required                     |
 
 
 #### Example JSON Request
@@ -56,26 +56,11 @@ Create a new Promo based on fields
 
 ### Get All Promos [GET] `/promo`
 
-Returns all unused promo codes
+Returns all unused promo codes. No JSON body. Just call the url.
 
 #### Parameters
 
 _None_
-
-#### Example JSON Request
-
-```json
-{
-  "brand": "nike",
-  "smallLabel": "one for one",
-  "bigLabel": "10",
-  "shortDescription": "Brand New",
-  "longDescription": "Longggggg Description",
-  "validity": "2025-02-04",
-  "points": 20
-}
-
-```
 
 #### Example JSON Response (Success)
 ```json
@@ -118,7 +103,7 @@ Get a single promo by its database id.
 
 | Name | Type    | Section | Remarks                      |
 |------|---------|---------|------------------------------|
-| `id` | String  | path    | required                     |
+| `id` | String  | _path_  | required                     |
 
 #### Example Request URI
 
@@ -144,7 +129,7 @@ Get a single promo by its database id.
 }
 ```
 
-### Delete Promo [DELETE] `/user/{id}`
+### Delete Promo [DELETE] `/promo/{id}`
 
 Delete a Promo based on their ID.
 
@@ -158,7 +143,7 @@ Delete a Promo based on their ID.
 #### Example Request URI
 
 ```
-/user/661359554a0fcb17ed21f5c9
+/promo/661359554a0fcb17ed21f5c9
 ```
 
 #### Example JSON Response (Success)
