@@ -4,6 +4,7 @@ import com.ashleykoh.promojioserver.exceptions.ServerRuntimeException;
 import com.ashleykoh.promojioserver.models.Promo;
 import com.ashleykoh.promojioserver.models.User;
 import com.mongodb.client.result.UpdateResult;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -100,5 +101,18 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
         }
     }
 
+    @Override
+    public void usePromo(String id, String promo_id) {
+        Query userQuery = new Query(Criteria.where("id").is(id));
+        Update userUpdate = new Update();
 
+        Query promoWithinUserQuery = new Query().addCriteria(Criteria.where("$id").is(new ObjectId(promo_id)));
+        userUpdate.pull("promos", promoWithinUserQuery);
+
+        UpdateResult result = mongoTemplate.updateFirst(userQuery, userUpdate, User.class);
+
+        if (result.getModifiedCount() == 0) {
+            throw new ServerRuntimeException("updated", "user does not have promo");
+        }
+    }
 }

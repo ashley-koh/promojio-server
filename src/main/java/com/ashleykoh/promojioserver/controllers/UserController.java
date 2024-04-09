@@ -166,6 +166,22 @@ public class UserController extends BaseController {
         return successResponse(data);
     }
 
+    @PostMapping("/{user_id}/use/promo/{promo_id}")
+    public ResponseEntity<Map<String, Object>> usePromo(
+            @PathVariable String user_id,
+            @PathVariable String promo_id,
+            @RequestHeader("username") String username,
+            @RequestHeader("password") String password
+    ) {
+        validateUser(user_id, username, password);
+
+        customUserRepository.usePromo(user_id, promo_id);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("updated", true);
+        return successResponse(data);
+    }
+
 
     // Important Behavior: Can be called successfully multiple times in a row
     // It guarantees no such document with user id exists

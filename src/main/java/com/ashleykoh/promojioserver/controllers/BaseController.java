@@ -14,7 +14,7 @@ public class BaseController {
     @Autowired
     UserRepository userRepository;
 
-     protected void validateUser(String id, String username, String password) {
+     protected User validateUser(String id, String username, String password) {
         User user = userRepository.findUserById(id);
 
         // check if user does not exist
@@ -25,6 +25,7 @@ public class BaseController {
             throw new ServerRuntimeException("credentials", "invalid");
         }
 
+        return user;
     }
 
     // Following Response templates follow JSend Response Format
