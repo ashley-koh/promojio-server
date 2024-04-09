@@ -123,6 +123,47 @@ Get a user by their database id. Replace `{id}` with the id of the user when cal
 }
 ```
 
+### Get Leaderboard [GET] `/user/leaderboard`
+
+Returns the top 10 users by tierPoints in order from highest to lowest.
+
+#### Parameters
+
+_None_
+
+#### Example JSON Response (Success)
+```json
+"data": {
+        "leaderboard": [
+            {
+                "id": "6614f1af66c3ff1fae776434",
+                "name": "Ashley2",
+                "username": "ashleykoh2",
+                "password": "pass",
+                "profileImage": null,
+                "points": 0,
+                "tierPoints": 5000,
+                "memberTier": "platinum",
+                "promos": []
+            },
+            {
+                "id": "6614f1b666c3ff1fae776435",
+                "name": "Ashley3",
+                "username": "ashleykoh3",
+                "password": "pass",
+                "profileImage": null,
+                "points": 0,
+                "tierPoints": 2500,
+                "memberTier": "gold",
+                "promos": []
+            },
+            (...and the next 8 documents)
+        ]
+    },
+    "status": "success"
+}
+```
+
 ### Update User Name [PATCH] `/user/{id}/update/details`
 
 Updates the details of the user. Currently, that is only the `name` field. Remember to set the headers of the request.
