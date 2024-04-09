@@ -129,6 +129,53 @@ Get a single promo by its database id.
 }
 ```
 
+### Get Random Promo [GET] `/promo/random`
+
+Returns a single valid promo within a range of min and max points (both inclusive). If no promo exists within the range, return the next closest promo.
+
+#### Parameters
+
+| Name  | Type    | Section | Remarks                 |
+|-------|---------|---------|-------------------------|
+| `min` | Integer | _param_ | optional, defaults to 0 |
+| `max` | Integer | _param_ | optional                |
+
+#### Example Request URIs
+
+Return any random promo from our entire database:
+```
+/promo/random
+```
+
+Return any random promo which is more than or equals to 20 points:
+```
+/promo/random?min=20
+```
+
+Return any random promo within a range of 21-50 points:
+```
+/promo/random?min=21?max=50
+```
+
+#### Example JSON Response (Success)
+```json
+{
+  "data": {
+    "id": "661359554a0fcb17ed21f5c9",
+    "brand": "nike",
+    "logoImage": null,
+    "smallLabel": "one for one",
+    "bigLabel": "10",
+    "shortDescription": "Brand New",
+    "longDescription": "Longggggg Description",
+    "validity": "2025-02-04T00:00:00.000+00:00",
+    "points": 20
+  },
+  "status": "success"
+}
+```
+
+
 ### Delete Promo [DELETE] `/promo/{id}`
 
 Delete a Promo based on their ID.

@@ -12,6 +12,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -29,6 +31,9 @@ public class CustomPromoRepositoryImpl implements CustomPromoRepository {
         if (min != null) { minInt = Integer.parseInt(min); }
         if (max != null) { maxInt = Integer.parseInt(max); }
 
+        // make sure query lasts at least a week from now
+        LocalDate oneWeekFromNow = LocalDate.now().plusDays(7);
+        MatchOperation validity = new MatchOperation(Criteria.where("validity").gte(oneWeekFromNow));
         MatchOperation match;
 
         if (min != null && max != null) {
@@ -41,6 +46,7 @@ public class CustomPromoRepositoryImpl implements CustomPromoRepository {
 
         // create aggregation
         Aggregation agg = Aggregation.newAggregation(
+                validity,
                 match,
                 new SampleOperation(1)
         );
@@ -58,14 +64,17 @@ public class CustomPromoRepositoryImpl implements CustomPromoRepository {
         Promo lowerPromo = null;
         Promo higherPromo = null;
 
+
         // query to get next lowest
         Query lowerQuery = new Query();
         lowerQuery.addCriteria(Criteria.where("points").lt(minInt));
+        lowerQuery.addCriteria(Criteria.where("validity").gte(oneWeekFromNow));
         lowerQuery.with(Sort.by(Sort.Direction.DESC, "points"));
 
         // query to get next highest
         Query higherQuery = new Query();
         higherQuery.addCriteria(Criteria.where("points").gt(maxInt));
+        higherQuery.addCriteria(Criteria.where("validity").gte(oneWeekFromNow));
         higherQuery.with(Sort.by(Sort.Direction.ASC, "points"));
 
         // only query if min or max is not null respectively
