@@ -62,7 +62,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
         update.set("tierPoints", tierPoints);
 
         if (tierPoints < 1000) {
-            update.set("memberTiers", "bronze");
+            update.set("memberTier", "bronze");
         } else if (tierPoints < 2000) {
             update.set("memberTiers", "silver");
         } else if (tierPoints < 3000) {
