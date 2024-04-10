@@ -39,7 +39,7 @@ public class SeedController extends BaseController {
     public ResponseEntity<Map<String, Object>> seedPromos() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode promosNode = objectMapper.readTree(promosResource.getFile());
+            JsonNode promosNode = objectMapper.readTree(promosResource.getInputStream());
 
             for ( JsonNode promoNode : promosNode ) {
                 String brand = promoNode.get("brand").asText();
