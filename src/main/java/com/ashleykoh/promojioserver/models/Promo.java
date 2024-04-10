@@ -29,6 +29,8 @@ public class Promo {
     @NotNull(message = "points required")
     @Min(value = 0, message = "points cannot be less than 0")
     private int points;
+    @NotBlank(message = "category required")
+    private String category;
 
     private String url;
 
@@ -98,6 +100,14 @@ public class Promo {
 
     public void setValidity(Date validity) {
         this.validity = validity;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public int getPoints() {

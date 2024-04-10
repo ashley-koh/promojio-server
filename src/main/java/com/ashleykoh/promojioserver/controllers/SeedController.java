@@ -48,8 +48,8 @@ public class SeedController extends BaseController {
                 String shortDescription = promoNode.get("shortDescription").asText();
                 String longDescription = promoNode.get("longDescription").asText();
                 String validity = promoNode.get("validity").asText();
+                String category = promoNode.get("category").asText();
                 int points = promoNode.get("points").asInt();
-
 
                 Promo promo = new Promo();
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -60,6 +60,7 @@ public class SeedController extends BaseController {
                 promo.setLongDescription(longDescription);
                 promo.setValidity(formatter.parse(validity));
                 promo.setPoints(points);
+                promo.setCategory(category);
 
                 System.out.println(promo.getValidity());
                 mongoTemplate.save(promo, "promo");
