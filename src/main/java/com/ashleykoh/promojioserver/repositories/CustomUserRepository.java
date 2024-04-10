@@ -12,6 +12,7 @@ public interface CustomUserRepository {
     void updateUserName(String id, String name);
     void updateUserPoints(String id, int points);
     void updateUserTierPoints(String id, int tierPoints);
+    void incrementUserTierPoints(String id, int incTierPoints);
     void addPromoToUser(String id, String promo_id);
     void usePromo(String id, String promo_id);
 }

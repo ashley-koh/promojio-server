@@ -82,6 +82,13 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
     }
 
     @Override
+    public void incrementUserTierPoints(String id, int incTierPoints) {
+        User user = mongoTemplate.findById(id, User.class);
+
+        updateUserTierPoints(id, user.getTierPoints() + incTierPoints);
+    }
+
+    @Override
     public void addPromoToUser(String id, String promo_id) {
         Query promoQuery = new Query(Criteria.where("id").is(promo_id));
         Promo promo = mongoTemplate.findOne(promoQuery, Promo.class);

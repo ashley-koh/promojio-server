@@ -316,6 +316,57 @@ Attaches a promo to user based on the promo id.
 }
 ```
 
+### User Creates Promo [POST] `/user/{id}/create/promo`
+
+User submitted Promo will be added to our database and will be attached to user document. Every promo the user creates, he/she will get 200 points.
+
+#### Parameters
+
+| Name               | Type    | Section  | Remarks        |
+|--------------------|---------|----------|----------------|
+| `id`               | String  | _path_   | _none_         |
+| `username`         | String  | _header_ | _none_         |
+| `password`         | String  | _header_ | _none_         |
+| `brand`            | String  | _body_  | required                     |
+| `category`         | String  | _body_  | required                     |
+| `smallLabel`       | String  | _body_  | required                     |
+| `bigLabel`         | String  | _body_  | required                     |
+| `shortDescription` | String  | _body_  | required                     |
+| `longDescription`  | String  | _body_  | required                     |
+| `validity`         | String  | _body_  | required, format: YYYY-MM-DD |
+| `points`           | Integer | _body_  | required                     |
+
+
+#### Example Request URI
+
+```
+/user/660ba05d11dd4412779e5b35/create/promo
+```
+
+#### Example JSON Request
+
+```json
+{
+  "brand": "nike",
+  "category": "shop",
+  "smallLabel": "one for one",
+  "bigLabel": "10",
+  "shortDescription": "Brand New",
+  "longDescription": "Longggggg Description",
+  "validity": "2025-02-04",
+  "points": 20
+}
+```
+
+#### Example JSON Response (Success)
+```json
+{
+    "data": {
+        "updated": true
+    },
+    "status": "success"
+}
+```
 ### Use Promo [POST] `/user/{user_id}/use/promo/{promo_id}`
 
 Consumes a Promo that the use is in possession of and increments the users' points with the points from the promo.

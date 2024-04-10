@@ -2,8 +2,10 @@ package com.ashleykoh.promojioserver.controllers;
 
 import com.ashleykoh.promojioserver.controllers.forms.*;
 import com.ashleykoh.promojioserver.exceptions.ServerRuntimeException;
+import com.ashleykoh.promojioserver.models.Promo;
 import com.ashleykoh.promojioserver.models.User;
 import com.ashleykoh.promojioserver.repositories.CustomUserRepository;
+import com.ashleykoh.promojioserver.repositories.PromoRepository;
 import com.ashleykoh.promojioserver.repositories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class UserController extends BaseController {
 
     @Autowired
     private CustomUserRepository customUserRepository;
+
+    @Autowired
+    private PromoRepository promoRepository;
 
     @GetMapping("/leaderboard")
     public ResponseEntity<Map<String, Object>> getTierPointsLeaderboard() {
@@ -160,6 +165,29 @@ public class UserController extends BaseController {
         validateUser(id, username, password);
 
         customUserRepository.addPromoToUser(id, promoToUserForm.getPromoId());
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("updated", true);
+        return successResponse(data);
+    }
+
+    @PostMapping("/{id}/create/promo")
+    public ResponseEntity<Map<String, Object>> userCreatePromo(
+            @PathVariable String id,
+            @RequestHeader("username") String username,
+            @RequestHeader("password") String password,
+            @RequestBody Promo promo
+    ) {
+        validateUser(id, username, password);
+
+        // add promo to database
+        Promo newPromo = promoRepository.save(promo);
+
+        // add promo to user
+        customUserRepository.addPromoToUser(id, newPromo.getId());
+
+        // give user tierPoints for submitting promo codes
+        customUserRepository.incrementUserTierPoints(id, 200);
 
         Map<String, Object> data = new HashMap<>();
         data.put("updated", true);
