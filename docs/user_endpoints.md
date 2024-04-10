@@ -289,7 +289,7 @@ Attaches a promo to user based on the promo id.
 | `id`       | String  | _path_   | _none_         |
 | `username` | String  | _header_ | _none_         |
 | `password` | String  | _header_ | _none_         |
-| `promoId`  | Integer | _body_   | zero and above |
+| `promoId`  | String  | _body_   | _should exist_ |
 
 
 #### Example Request URI
