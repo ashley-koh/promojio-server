@@ -113,14 +113,19 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
 
         if (result.getModifiedCount() == 0) {
             throw new ServerRuntimeException("updated", "user does not have promo");
-        } else {
-            Promo promo = mongoTemplate.findById(promo_id, Promo.class);
-
-            if (promo == null) {
-                throw new ServerRuntimeException("updated", "promo no longer exists");
-            }
-
-            updateUserPoints(id, promo.getPoints()); // rewards points from promo to user
         }
+
+        User user = mongoTemplate.findById(id, User.class);
+        Promo promo = mongoTemplate.findById(promo_id, Promo.class);
+
+        if (promo == null) {
+            throw new ServerRuntimeException("updated", "promo no longer exists");
+        }
+
+        if (user == null) {
+            throw new ServerRuntimeException("updated", "user does not exist");
+        }
+
+        updateUserPoints(id, user.getPoints() + promo.getPoints()); // rewards points from promo to user
     }
 }
