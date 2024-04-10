@@ -14,7 +14,7 @@ public class BaseController {
     @Autowired
     UserRepository userRepository;
 
-     protected User validateUser(String id, String username, String password) {
+     protected void validateUser(String id, String username, String password) {
         User user = userRepository.findUserById(id);
 
         // check if user does not exist
@@ -25,8 +25,7 @@ public class BaseController {
             throw new ServerRuntimeException("credentials", "invalid");
         }
 
-        return user;
-    }
+     }
 
     // Following Response templates follow JSend Response Format
     // https://github.com/omniti-labs/jsend
@@ -46,8 +45,8 @@ public class BaseController {
         return ResponseEntity.badRequest().body(response);
     }
 
-    static ResponseEntity<Map<String, String>> errorResponse(String message) {
-        Map<String, String> response = new HashMap<>();
+    static ResponseEntity<Map<String, Object>> errorResponse(String message) {
+        Map<String, Object> response = new HashMap<>();
         response.put("status", "error");
         response.put("data", message);
 
