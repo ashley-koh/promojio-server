@@ -316,6 +316,36 @@ Attaches a promo to user based on the promo id.
 }
 ```
 
+### Use Promo [POST] `/user/{user_id}/use/promo/{promo_id}`
+
+Consumes a Promo that the use is in possession of and increments the users' points with the points from the promo.
+
+#### Parameters
+
+| Name       | Type    | Section  | Remarks      |
+|------------|---------|----------|--------------|
+| `user_id`  | String  | _path_   | should exist |
+| `promo_id` | String  | _path_   | should exist |
+| `username` | String  | _header_ | _none_       |
+| `password` | String  | _header_ | _none_       |
+
+
+#### Example Request URI
+
+```
+/user/6614f1a366c3ff1fae776432/use/promo/66150b533759f37bdd0d573a
+```
+
+#### Example JSON Response (Success)
+```json
+{
+    "data": {
+        "updated": true
+    },
+    "status": "success"
+}
+```
+
 #### Delete User [DELETE] `/user/{id}`
 
 Delete a User based on their ID.
