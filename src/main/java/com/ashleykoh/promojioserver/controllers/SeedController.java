@@ -62,7 +62,6 @@ public class SeedController extends BaseController {
                 promo.setPoints(points);
                 promo.setCategory(category);
 
-                System.out.println(promo.getValidity());
                 mongoTemplate.save(promo, "promo");
             }
 
