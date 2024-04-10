@@ -346,7 +346,7 @@ Consumes a Promo that the use is in possession of and increments the users' poin
 }
 ```
 
-#### Delete User [DELETE] `/user/{id}`
+### Delete User [DELETE] `/user/{id}`
 
 Delete a User based on their ID.
 
