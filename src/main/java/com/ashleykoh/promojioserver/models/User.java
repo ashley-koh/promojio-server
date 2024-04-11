@@ -2,6 +2,7 @@ package com.ashleykoh.promojioserver.models;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -22,8 +23,10 @@ public class User {
     @NotBlank(message = "password required")
     private String password;
     private Binary profileImage;
+    @NotNull
     @Min(value = 0, message = "points cannot be less than 0")
     private int points;
+    @NotNull
     @Min(value = 0, message = "tierPoints cannot be less than 0")
     private int tierPoints;
     private String memberTier;

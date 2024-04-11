@@ -6,7 +6,6 @@ import com.ashleykoh.promojioserver.models.Promo;
 import com.ashleykoh.promojioserver.models.User;
 import com.ashleykoh.promojioserver.repositories.CustomUserRepository;
 import com.ashleykoh.promojioserver.repositories.PromoRepository;
-import com.ashleykoh.promojioserver.repositories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -131,7 +130,7 @@ public class UserController extends BaseController {
     ) {
         validateUser(id, username, password);
 
-        customUserRepository.updateUserPoints(id, userPoints.getPoints());
+        customUserRepository.incrementUserPoints(id, userPoints.getPoints());
 
         Map<String, Object> data = new HashMap<>();
         data.put("updated", true);
@@ -148,7 +147,7 @@ public class UserController extends BaseController {
     ) {
         validateUser(id, username, password);
 
-        customUserRepository.updateUserTierPoints(id, userTierPoints.getTierPoints());
+        customUserRepository.incrementUserTierPoints(id, userTierPoints.getTierPoints());
 
         Map<String, Object> data = new HashMap<>();
         data.put("updated", true);
