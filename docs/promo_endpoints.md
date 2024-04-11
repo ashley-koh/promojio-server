@@ -11,6 +11,7 @@ Create a new Promo based on fields
 | Name               | Type    | Section | Remarks                      |
 |--------------------|---------|---------|------------------------------|
 | `brand`            | String  | _body_  | required                     |
+| `category`         | String  | _body_  | required                     |
 | `smallLabel`       | String  | _body_  | required                     |
 | `bigLabel`         | String  | _body_  | required                     |
 | `shortDescription` | String  | _body_  | required                     |
@@ -24,6 +25,7 @@ Create a new Promo based on fields
 ```json
 {
   "brand": "nike",
+  "category": "shop",
   "smallLabel": "one for one",
   "bigLabel": "10",
   "shortDescription": "Brand New",
@@ -41,6 +43,7 @@ Create a new Promo based on fields
         "promo": {
             "id": "661359554a0fcb17ed21f5c9",
             "brand": "nike",
+            "category": "shop",
             "logoImage": null,
             "smallLabel": "one for one",
             "bigLabel": "10",
@@ -70,6 +73,7 @@ _None_
       {
         "id": "661359554a0fcb17ed21f5c9",
         "brand": "nike",
+        "category": "shop",
         "logoImage": null,
         "smallLabel": "one for one",
         "bigLabel": "10",
@@ -81,6 +85,7 @@ _None_
       {
         "id": "66135b0b4a0fcb17ed21f5ca",
         "brand": "adidas",
+        "category": "shop",
         "logoImage": null,
         "smallLabel": "get 1 free",
         "bigLabel": "buy three",
@@ -117,6 +122,7 @@ Get a single promo by its database id.
   "data": {
     "id": "661359554a0fcb17ed21f5c9",
     "brand": "nike",
+    "category": "shop",
     "logoImage": null,
     "smallLabel": "one for one",
     "bigLabel": "10",
@@ -164,6 +170,7 @@ Return any random promo within a range of 21-50 points:
     "promo": {
       "id": "66150bdc3759f37bdd0d5740",
       "brand": "nike",
+      "category": "shop",
       "logoImage": null,
       "smallLabel": "off",
       "bigLabel": "10",

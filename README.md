@@ -7,8 +7,25 @@
     <img src="https://img.shields.io/badge/-Mongo DB-black?style=for-the-badge&logoColor=white&logo=mongodb&color=91CCB3" alt="docker" />
   </div>
 
-  <p align="center">Self-hosted cloud-based server for <a href=https://github.com/zayne-siew/PromoJio>PromoJio</a></p>
+  <p align="center">Self-hosted web server for <a href=https://github.com/zayne-siew/PromoJio>PromoJio</a></p>
 </div>
+
+## Team 54
+
+| Member                | Student Number |
+|-----------------------|----------------|
+| Ashley Koh Jia Jhin   | 1004197        |
+| Siew Rui Ze, Zayne    | 1007180        |
+| Tan Yan Lin, Charlese | 1007075        |
+| Khoo Jing Heng        | 1007221        |
+| Allison Yee Wen Chyi  | 1007020        |
+| Asli Robin Rufo       | 1007212        |
+| Austin Isaac          | 1007099        |
+
+## Documentation of Endpoints
+
+1. [User Endpoints](https://github.com/ashley-koh/promojio-server/blob/main/docs/user_endpoints.md)
+1. [Promo Endpoints](https://github.com/ashley-koh/promojio-server/blob/main/docs/promo_endpoints.md)
 
 ## Requirements
 
@@ -16,65 +33,29 @@
 Other IDEs (e.g. VSCode) also viable
 2. [Docker](https://docs.docker.com/engine/install/) - follow the installation instructions from the official documentation
 
-## Installation
+## Local Development Setup
 1. Select `Get from Version Control` when creating new project.
 2. Paste `https://github.com/ashley-koh/promojio-server.git` and select `Clone`
-3. [If within IntelliJ] Right-click `compose.yml` and select `Run 'compose.yml': Compose...`\
-[In Terminal] Run the following command:
+3. Run the following command in a terminal:
 ```cmd
-docker compose up --build
+docker compose up -d mongodb mongo-express
 ```
 4. An instance of MongoDB and MongoExpress should now be running in the background
-5. Build and run this git repo in IntelliJ Idea to run this server
-6. Start Requesting!
+5. Build and run this git repo in IntelliJ Idea (or your IDE of choice) to run this server
+6. Start Requesting on `http://localhost:8080`
 
-## Usage
-
-Use this function to get JSON from URL (not complete)
-```java
-public static JSONObject getJSONObjectFromURL(String urlString) throws IOException, JSONException {
-    HttpURLConnection urlConnection = null;
-    URL url = new URL(urlString);
-    urlConnection = (HttpURLConnection) url.openConnection();
-    urlConnection.setRequestMethod("GET");
-    urlConnection.setReadTimeout(10000 /* milliseconds */ );
-    urlConnection.setConnectTimeout(15000 /* milliseconds */ );
-    urlConnection.setDoOutput(true);
-    urlConnection.connect();
-
-    BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
-    StringBuilder sb = new StringBuilder();
-
-    String line;
-    while ((line = br.readLine()) != null) {
-        sb.append(line + "\n");
-    }
-    br.close();
-
-    String jsonString = sb.toString();
-    System.out.println("JSON: " + jsonString);
-
-    return new JSONObject(jsonString);
-}
+## Production Setup
+1. Update `application.properties` to use mongodb container network
+```properties
+spring.data.mongodb.uri=mongodb://rootuser:rootpass@mongodb:27017
 ```
-
-Do not forget to add Internet permission to your manifest
-
-`<uses-permission android:name="android.permission.INTERNET" />`
-
-Then use it like this
-
-```java
-try{
-      JSONObject jsonObject = getJSONObjectFromURL(urlString);
-      //
-      // Parse your json here
-      //
-} catch (IOException e) {
-      e.printStackTrace();
-} catch (JSONException e) {
-      e.printStackTrace();
-}
+2. In a terminal on the directory of this project, run:
+```cmd
+mvn clean install
+mvn package
+docker image build -t ashleykoh24/promojio-server .
+docker compose up -d
 ```
+3. Connect to Server using url: `http://yourserverip:8080`
 
-Above is adapted from [this StackOverflow answer](https://stackoverflow.com/questions/34691175/how-to-send-httprequest-and-get-json-response-in-android)
+(Note: This server is currently unsecured)
