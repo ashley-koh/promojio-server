@@ -154,7 +154,7 @@ Return any random promo which is more than or equals to 20 points:
 
 Return any random promo within a range of 21-50 points:
 ```
-/promo/random?min=21?max=50
+/promo/random?min=21&max=50
 ```
 
 #### Example JSON Response (Success)
