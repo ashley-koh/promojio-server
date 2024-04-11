@@ -15,11 +15,11 @@ public class TierPointsDecayTask {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    @Scheduled(cron = "* */2 * * * *") // Run every hour
+    @Scheduled(cron = "*/2 * * * * *") // Run every hour
     public void decayTierPoints() {
         // find all documents that have tierPoints more than decreaseBy
         // this prevents tierPoints from going negative
-        int decreaseBy = 10;
+        int decreaseBy = 1;
         Query query = new Query(Criteria.where("tierPoints").gte(decreaseBy));
 
         Update update = new Update();
