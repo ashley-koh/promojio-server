@@ -42,7 +42,8 @@ docker compose up -d mongodb mongo-express
 ```
 4. An instance of MongoDB and MongoExpress should now be running in the background
 5. Build and run this git repo in IntelliJ Idea (or your IDE of choice) to run this server
-6. Start Requesting on `http://localhost:8080`
+6. Connect to Spring Web Server on `http://localhost:8080`
+7. View MongoExpress on `http://localhost:8081`
 
 ## Production Setup
 1. Update `application.properties` to use mongodb container network
@@ -56,6 +57,7 @@ mvn package
 docker image build -t ashleykoh24/promojio-server .
 docker compose up -d
 ```
-3. Connect to Server using url: `http://yourserverip:8080`
+3. Connect to Spring Web Server on: `http://yourserverip:8080`
+4. View MongoExpress on: `http://yourserverip:8081`
 
 (Note: This server is currently unsecured)
