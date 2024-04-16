@@ -60,7 +60,7 @@ public class PromoDistributionTask {
             promos.add(mappedResult.get(0));
 
             // capped at 7 promos, remove first one
-            if (promos.size() > 7) {
+            if (promos.size() > 20) {
                 promos.remove(0);
             }
 
